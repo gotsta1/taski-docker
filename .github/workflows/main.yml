@@ -12,13 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Копируем код проекта
     - name: Check out code
       uses: actions/checkout@v4
-    # Устанавливаем Python с помощью action
     - name: Set up Python
       uses: actions/setup-python@v5
-    # В action setup-python передаём параметр — версию Python
       with:
         python-version: "3.10"
     # Обновляем pip, устанавливаем ruff
@@ -27,7 +24,10 @@ jobs:
         python -m pip install --upgrade pip 
         pip install ruff==0.8.0
     # Запускаем ruff
-    - name: Lint with ruff
+    - name: Lint with ruff and run django tests
       # Вызываем ruff и указываем ему,
       # что нужно проверить файлы только в папке backend/
-      run: python -m ruff check backend/
+      run: |
+        python -m ruff check backend/
+        cd backend/
+        python manage.py test
